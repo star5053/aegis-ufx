@@ -176,12 +176,12 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(min(100%,11.25rem),1fr))]">
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
           {screens.map((s) => (
             <Link
               key={s.href}
               href={s.href}
-              className="landing-card group flex min-h-[7.25rem] w-full flex-col rounded-2xl p-4"
+              className="landing-card group flex min-h-[7.25rem] w-full flex-col rounded-2xl p-4 sm:w-[calc(50%-0.375rem)] md:w-[calc(33.333%-0.5rem)] lg:w-[calc(25%-0.5625rem)]"
             >
               <s.icon className="mb-3 h-5 w-5 shrink-0 text-[var(--ufx-accent)] transition duration-300 group-hover:scale-110 group-hover:text-[var(--aegis-accent)]" />
               <p className="font-semibold tracking-tight">{s.title}</p>
