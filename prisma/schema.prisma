@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_OWNER
+  PLATFORM_ADMIN
+  FINANCE_ADMIN
+  MODERATOR
+  SUPPORT
+  DEVELOPER
+  USER
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum PostType {
+  TEXT
+  PHOTO
+  VIDEO
+}
+
+enum AppStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
+model Application {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  status      AppStatus @default(ACTIVE)
+  branding    Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  users User[]
+  posts Post[]
+}
+
+model User {
+  id             String     @id @default(cuid())
+  publicId       String     @unique
+  email          String     @unique
+  phone          String?
+  passwordHash   String
+  username       String     @unique
+  displayName    String
+  bio            String?
+  avatarUrl      String?
+  role           UserRole   @default(USER)
+  status         UserStatus @default(ACTIVE)
+  twoFactorEnabled Boolean  @default(false)
+  applicationId  String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  application Application? @relation(fields: [applicationId], references: [id])
+  sessions    Session[]
+  posts       Post[]
+  likes       Like[]
+  notifications Notification[]
+  auditLogs   AuditLog[]   @relation("AuditActor")
+
+  @@index([applicationId])
+  @@index([role])
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  tokenHash  String   @unique
+  userId     String
+  deviceName String?
+  ip         String?
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Post {
+  id            String   @id @default(cuid())
+  userId        String
+  applicationId String
+  type          PostType @default(TEXT)
+  caption       String
+  imageUrl      String?
+  likeCount     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application @relation(fields: [applicationId], references: [id])
+  likes       Like[]
+
+  @@index([applicationId, createdAt])
+  @@index([userId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([postId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  action     String
+  targetType String?
+  targetId   String?
+  meta       Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  actor User? @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([actorId])
+}
