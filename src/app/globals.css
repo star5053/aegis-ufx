@@ -386,6 +386,116 @@ textarea {
   z-index: 1;
 }
 
+.landing-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.8rem 1.45rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease,
+    color 0.25s ease,
+    filter 0.25s ease;
+}
+
+.landing-cta:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--aegis-accent) 70%, white);
+  outline-offset: 3px;
+}
+
+.landing-cta--primary {
+  color: #fff;
+  background: linear-gradient(
+    135deg,
+    #ff4b6e 0%,
+    var(--ufx-accent) 48%,
+    #e01945 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 12px 36px rgba(255, 45, 85, 0.38),
+    0 2px 0 rgba(255, 255, 255, 0.18) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+.landing-cta--primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 16px 44px rgba(255, 45, 85, 0.48),
+    0 2px 0 rgba(255, 255, 255, 0.22) inset;
+}
+
+.landing-cta--primary:active {
+  transform: translateY(0);
+}
+
+.landing-cta__shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.28) 48%,
+    transparent 62%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.55s ease;
+}
+
+.landing-cta--primary:hover .landing-cta__shine {
+  transform: translateX(120%);
+}
+
+.landing-cta--operator {
+  color: rgba(255, 255, 255, 0.88);
+  background: linear-gradient(
+    145deg,
+    rgba(47, 214, 196, 0.1) 0%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  border: 1px solid rgba(47, 214, 196, 0.35);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.landing-cta--operator:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  border-color: rgba(47, 214, 196, 0.7);
+  background: linear-gradient(
+    145deg,
+    rgba(47, 214, 196, 0.18) 0%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  box-shadow:
+    0 12px 36px rgba(47, 214, 196, 0.18),
+    0 0 0 1px rgba(47, 214, 196, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.landing-cta--operator:active {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-cta,
+  .landing-cta__shine {
+    transition: none;
+  }
+}
+
 @keyframes landing-drift-a {
   0%,
   100% {

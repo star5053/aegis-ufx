@@ -145,22 +145,23 @@ export default function LandingPage() {
           rewrite.
         </p>
 
-        <div className="mt-9 flex flex-wrap gap-3">
-          <Link
-            href="/ufx/login"
-            className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-black shadow-[0_10px_28px_rgba(255,255,255,0.14)] transition hover:bg-white/92"
-          >
-            Try as Henry
+        <div className="mt-9 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap">
+          <Link href="/ufx/login" className="landing-cta landing-cta--primary group">
+            <span className="landing-cta__shine" aria-hidden />
+            <span className="relative z-[1] inline-flex items-center justify-center gap-2">
+              Try as Henry
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </span>
           </Link>
-          <Link
-            href="/aegis/login"
-            className="rounded-full border border-white/20 bg-white/[0.04] px-5 py-3 text-sm font-medium backdrop-blur-md transition hover:border-[var(--aegis-accent)]/45 hover:text-[var(--aegis-accent)]"
-          >
-            Operator login
+          <Link href="/aegis/login" className="landing-cta landing-cta--operator group">
+            <span className="relative z-[1] inline-flex items-center justify-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--aegis-accent)] shadow-[0_0_8px_var(--aegis-accent)]" />
+              Operator login
+            </span>
           </Link>
         </div>
         <p className="mt-4 font-[family-name:var(--font-jetbrains)] text-[11px] tracking-wide text-white/35">
-          Demo password for all accounts: <span className="text-white/65">Demo123!</span>
+          Demo password for all accounts: <span className="text-white/70">Demo123!</span>
         </p>
       </section>
 
