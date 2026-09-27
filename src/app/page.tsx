@@ -1,24 +1,82 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  Boxes,
   Clapperboard,
+  Coins,
+  Fingerprint,
   Gamepad2,
   Gauge,
   Music2,
   Radio,
+  ShieldCheck,
   Sparkles,
   Wallet,
 } from "lucide-react";
 
-const screens = [
-  { href: "/ufx", title: "Home", desc: "For You feed · Stories · Gifts", icon: Sparkles },
-  { href: "/ufx/reels", title: "Reels", desc: "Vertical video · Sounds", icon: Clapperboard },
-  { href: "/ufx/music", title: "Music", desc: "Charts · Play · Use in video", icon: Music2 },
-  { href: "/ufx/game", title: "Games Hub", desc: "Rooms · Coin entry", icon: Gamepad2 },
-  { href: "/ufx/wallet", title: "Wallet", desc: "Coins · Ledger · Withdraw", icon: Wallet },
-  { href: "/ufx/live", title: "Live", desc: "Chat · Gifts · Viewers", icon: Radio },
-  { href: "/aegis", title: "AEGIS Control", desc: "Metrics · Apps · Audit", icon: Gauge },
+const experiences = [
+  {
+    href: "/ufx",
+    title: "For You",
+    desc: "A full-screen feed tuned to what you love — stories, gifts, and creators in one swipe.",
+    icon: Sparkles,
+  },
+  {
+    href: "/ufx/reels",
+    title: "Reels",
+    desc: "Shoot, edit, and post vertical video with sounds pulled straight from UFX Music.",
+    icon: Clapperboard,
+  },
+  {
+    href: "/ufx/music",
+    title: "Music",
+    desc: "Trending charts, new releases, and one tap to use any track in your next video.",
+    icon: Music2,
+  },
+  {
+    href: "/ufx/game",
+    title: "Games",
+    desc: "Join racing, wrestling, and quiz rooms with friends and play for coins.",
+    icon: Gamepad2,
+  },
+  {
+    href: "/ufx/live",
+    title: "Live",
+    desc: "Go live, chat in real time, and receive gifts from your audience as it happens.",
+    icon: Radio,
+  },
+  {
+    href: "/ufx/wallet",
+    title: "Wallet",
+    desc: "One coin balance for gifts, game entries, and creator earnings — with a clear ledger.",
+    icon: Wallet,
+  },
 ];
+
+const pillars = [
+  {
+    title: "AEGIS ID",
+    desc: "One identity and session across every app, with two-factor protection for staff.",
+    icon: Fingerprint,
+  },
+  {
+    title: "Roles & audit",
+    desc: "Role-based permissions on every API, and an audit trail for every sensitive action.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Coins & ledger",
+    desc: "Server-authoritative balances, so gifts, game entries, and payouts always reconcile.",
+    icon: Coins,
+  },
+  {
+    title: "Multi-app registry",
+    desc: "UFX is the first app on AEGIS. New apps plug into the same users, wallet, and controls.",
+    icon: Boxes,
+  },
+];
+
+const nextUp = ["Creator payouts", "Live commerce", "AI recommendations", "Marketplace app"];
 
 function LandingAtmosphere() {
   return (
@@ -87,30 +145,51 @@ function LandingAtmosphere() {
   );
 }
 
-/** MVP first page — architecture + product map. */
+function Eyebrow({ children, tone = "ufx" }: { children: React.ReactNode; tone?: "ufx" | "aegis" }) {
+  return (
+    <p
+      className={`font-[family-name:var(--font-jetbrains)] text-[11px] font-medium uppercase tracking-[0.22em] ${
+        tone === "aegis" ? "text-[var(--aegis-accent)]" : "text-[var(--ufx-accent)]"
+      }`}
+    >
+      {children}
+    </p>
+  );
+}
+
 export default function LandingPage() {
   return (
     <main className="landing-shell">
       <LandingAtmosphere />
 
-      <div className="landing-header-glass relative z-10">
-        <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-          <div>
+      <div className="landing-header-glass sticky top-0 z-20">
+        <header className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-5">
+          <Link href="/" className="shrink-0">
             <p className="font-[family-name:var(--font-syne)] text-lg font-semibold tracking-tight">
               <span className="text-[var(--aegis-accent)]">AEGIS</span>{" "}
               <span className="text-white/30">×</span>{" "}
               <span className="tracking-[0.2em] text-white">.UFX.</span>
             </p>
-            <p className="mt-0.5 font-[family-name:var(--font-jetbrains)] text-[10px] tracking-[0.14em] text-white/40 uppercase">
-              Client MVP · Stage 1 foundation + product UI
-            </p>
-          </div>
-          <div className="flex gap-2 text-sm">
+          </Link>
+
+          <nav className="hidden items-center gap-7 text-sm text-white/60 md:flex">
+            <a href="#experience" className="transition hover:text-white">
+              The app
+            </a>
+            <a href="#platform" className="transition hover:text-white">
+              Platform
+            </a>
+            <a href="#next" className="transition hover:text-white">
+              What&apos;s next
+            </a>
+          </nav>
+
+          <div className="flex items-center gap-2 text-sm">
             <Link
-              href="/aegis"
-              className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white/75 backdrop-blur-md transition hover:border-[var(--aegis-accent)]/55 hover:text-[var(--aegis-accent)]"
+              href="/ufx/login"
+              className="hidden rounded-full px-4 py-2 text-white/75 transition hover:text-white sm:inline-flex"
             >
-              Control Center
+              Sign in
             </Link>
             <Link
               href="/ufx"
@@ -123,74 +202,196 @@ export default function LandingPage() {
         </header>
       </div>
 
-      <section className="relative z-10 mx-auto max-w-6xl px-6 pb-10 pt-6 sm:pt-10">
-        <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/25 px-3.5 py-1.5 text-xs text-white/75 backdrop-blur-md">
+      {/* Hero */}
+      <section className="relative z-10 mx-auto max-w-6xl px-6 pb-16 pt-10 sm:pt-16">
+        <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/12 bg-black/25 px-3.5 py-1.5 text-xs text-white/75 backdrop-blur-md">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--aegis-accent)] opacity-50" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--aegis-accent)] shadow-[0_0_10px_var(--aegis-accent)]" />
           </span>
-          Users open UFX · Operators run AEGIS
+          UFX is live on the AEGIS platform
         </p>
 
-        <h1 className="max-w-3xl font-[family-name:var(--font-syne)] text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl lg:text-6xl">
+        <h1 className="max-w-4xl font-[family-name:var(--font-syne)] text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl lg:text-6xl">
           Social. Music. Games. Live. Wallet.
           <span className="mt-3 block bg-gradient-to-r from-[var(--ufx-accent)] via-[#ff5a7a] to-[var(--aegis-accent)] bg-clip-text text-transparent">
-            On one AEGIS platform.
+            One app. One identity.
           </span>
         </h1>
 
-        <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/58 sm:text-lg">
-          This MVP mirrors your product UI and keeps the real architecture: identity, APIs,
-          permissions, audit, and multi-app registry — ready to expand into Stage 2–4 without a
-          rewrite.
+        <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg">
+          UFX brings short video, music, games, live streaming, and a coin wallet together in a
+          single app — powered by AEGIS, the platform that keeps every account, payment, and
+          permission secure.
         </p>
 
         <div className="mt-9 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap">
           <Link href="/ufx/login" className="landing-cta landing-cta--primary group">
             <span className="landing-cta__shine" aria-hidden />
             <span className="relative z-[1] inline-flex items-center justify-center gap-2">
-              Try as Henry
+              Get started
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </span>
           </Link>
-          <Link href="/aegis/login" className="landing-cta landing-cta--operator group">
+          <Link href="/ufx" className="landing-cta landing-cta--operator group">
             <span className="relative z-[1] inline-flex items-center justify-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-[var(--aegis-accent)] shadow-[0_0_8px_var(--aegis-accent)]" />
-              Operator login
+              Explore UFX
             </span>
           </Link>
         </div>
-        <p className="mt-4 font-[family-name:var(--font-jetbrains)] text-[11px] tracking-wide text-white/35">
-          Demo password for all accounts: <span className="text-white/70">Demo123!</span>
-        </p>
+
+        <dl className="mt-14 grid max-w-3xl grid-cols-2 gap-x-8 gap-y-6 border-t border-white/10 pt-8 sm:grid-cols-4">
+          {[
+            ["1", "AEGIS ID for every app"],
+            ["6", "experiences in UFX"],
+            ["1", "coin wallet across it all"],
+            ["24/7", "audit & moderation"],
+          ].map(([value, label]) => (
+            <div key={label}>
+              <dt className="sr-only">{label}</dt>
+              <dd className="font-[family-name:var(--font-syne)] text-3xl font-semibold tracking-tight">
+                {value}
+              </dd>
+              <dd className="mt-1 text-xs leading-snug text-white/45">{label}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
 
-      <section className="relative z-10 mx-auto max-w-6xl px-6 pb-20">
-        <div className="mb-1 flex items-end justify-between gap-4">
-          <div>
-            <h2 className="font-[family-name:var(--font-syne)] text-2xl font-semibold">
-              Product screens in this MVP
-            </h2>
-            <p className="mt-2 text-sm text-white/48">
-              Every screen maps to your design — wired for expansion into full AEGIS services.
-            </p>
-          </div>
-        </div>
+      {/* The app */}
+      <section id="experience" className="relative z-10 mx-auto max-w-6xl scroll-mt-24 px-6 py-16">
+        <Eyebrow>The app</Eyebrow>
+        <h2 className="mt-3 max-w-2xl font-[family-name:var(--font-syne)] text-3xl font-semibold tracking-tight sm:text-4xl">
+          Everything you watch, play, and share — in one place.
+        </h2>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/55 sm:text-base">
+          No hopping between apps. Your feed, your sounds, your games, and your coins all live
+          under one account.
+        </p>
 
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          {screens.map((s) => (
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {experiences.map((s) => (
             <Link
               key={s.href}
               href={s.href}
-              className="landing-card group flex min-h-[7.25rem] w-full flex-col rounded-2xl p-4 sm:w-[calc(50%-0.375rem)] md:w-[calc(33.333%-0.5rem)] lg:w-[calc(25%-0.5625rem)]"
+              className="landing-card group flex min-h-[10.5rem] flex-col rounded-2xl p-5"
             >
-              <s.icon className="mb-3 h-5 w-5 shrink-0 text-[var(--ufx-accent)] transition duration-300 group-hover:scale-110 group-hover:text-[var(--aegis-accent)]" />
-              <p className="font-semibold tracking-tight">{s.title}</p>
-              <p className="mt-1 text-xs leading-relaxed text-white/45">{s.desc}</p>
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[var(--ufx-accent)]/10">
+                <s.icon className="h-5 w-5 text-[var(--ufx-accent)] transition duration-300 group-hover:scale-110" />
+              </span>
+              <p className="mt-4 text-lg font-semibold tracking-tight">{s.title}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-white/50">{s.desc}</p>
+              <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-xs font-medium text-white/40 transition group-hover:text-[var(--ufx-accent)]">
+                Open
+                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              </span>
             </Link>
           ))}
         </div>
       </section>
+
+      {/* The platform */}
+      <section id="platform" className="relative z-10 mx-auto max-w-6xl scroll-mt-24 px-6 py-16">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.25fr] lg:items-start">
+          <div className="lg:sticky lg:top-28">
+            <Eyebrow tone="aegis">The platform</Eyebrow>
+            <h2 className="mt-3 font-[family-name:var(--font-syne)] text-3xl font-semibold tracking-tight sm:text-4xl">
+              AEGIS runs everything behind the scenes.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-white/55 sm:text-base">
+              Identity, permissions, payments, and moderation are owned by the platform — not
+              rebuilt inside each app. That&apos;s how UFX stays secure today and how new apps
+              launch tomorrow.
+            </p>
+            <Link
+              href="/aegis/login"
+              className="landing-cta landing-cta--operator group mt-8 w-full sm:w-auto"
+            >
+              <span className="relative z-[1] inline-flex items-center justify-center gap-2">
+                <Gauge className="h-4 w-4 text-[var(--aegis-accent)]" />
+                Open Control Center
+              </span>
+            </Link>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {pillars.map((p) => (
+              <div key={p.title} className="landing-card rounded-2xl p-5">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--aegis-accent)]/25 bg-[var(--aegis-accent)]/10">
+                  <p.icon className="h-5 w-5 text-[var(--aegis-accent)]" />
+                </span>
+                <p className="mt-4 text-lg font-semibold tracking-tight">{p.title}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-white/50">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* What's next */}
+      <section id="next" className="relative z-10 mx-auto max-w-6xl scroll-mt-24 px-6 py-16">
+        <div className="landing-card rounded-3xl p-8 sm:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+            <div>
+              <Eyebrow>What&apos;s next</Eyebrow>
+              <h2 className="mt-3 font-[family-name:var(--font-syne)] text-2xl font-semibold tracking-tight sm:text-3xl">
+                Built to grow with its community.
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-white/55 sm:text-base">
+                Because every feature sits on the same AEGIS foundation, new capabilities ship
+                into UFX — and into new apps — without starting over.
+              </p>
+            </div>
+            <ul className="flex flex-wrap gap-2.5 lg:justify-end">
+              {nextUp.map((item) => (
+                <li
+                  key={item}
+                  className="rounded-full border border-white/12 bg-white/[0.04] px-4 py-2 text-sm text-white/75"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Closing CTA */}
+      <section className="relative z-10 mx-auto max-w-6xl px-6 pb-20 pt-8 text-center">
+        <h2 className="mx-auto max-w-2xl font-[family-name:var(--font-syne)] text-3xl font-semibold tracking-tight sm:text-4xl">
+          Your world, in one app.
+        </h2>
+        <p className="mx-auto mt-4 max-w-xl text-sm text-white/55 sm:text-base">
+          Create your AEGIS ID once and step into everything UFX has to offer.
+        </p>
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link href="/ufx/login" className="landing-cta landing-cta--primary group w-full max-w-xs sm:w-auto">
+            <span className="landing-cta__shine" aria-hidden />
+            <span className="relative z-[1] inline-flex items-center justify-center gap-2">
+              Create your account
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      <footer className="relative z-10 border-t border-white/10">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-xs text-white/40 sm:flex-row">
+          <p>© 2026 AEGIS. UFX is built on the AEGIS platform.</p>
+          <div className="flex items-center gap-5">
+            <Link href="/ufx" className="transition hover:text-white">
+              Open UFX
+            </Link>
+            <Link href="/ufx/login" className="transition hover:text-white">
+              Sign in
+            </Link>
+            <Link href="/aegis/login" className="transition hover:text-white">
+              Control Center
+            </Link>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

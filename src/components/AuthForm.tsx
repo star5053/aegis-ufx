@@ -113,9 +113,9 @@ export function AuthForm({
       )}
 
       <p className="text-center text-xs text-white/35">
-        Auth runs through AEGIS Identity ·{" "}
+        Secured by AEGIS ID ·{" "}
         <Link href="/" className="underline underline-offset-2">
-          Architecture
+          Home
         </Link>
       </p>
     </form>

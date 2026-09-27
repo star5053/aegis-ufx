@@ -24,16 +24,16 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AEGIS × UFX",
+  title: "UFX — Social, music, games, live & wallet · Built on AEGIS",
   description:
-    "UFX social super-app powered by AEGIS — identity, media, music, games, wallet, and live.",
+    "UFX brings short video, music, games, live streaming, and a coin wallet into one app, powered by the AEGIS platform.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${syne.variable} ${instrument.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${syne.variable} ${instrument.variable} ${jetbrains.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full flex flex-col bg-black text-white">{children}</body>
     </html>
