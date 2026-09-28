@@ -13,6 +13,7 @@ import {
   Sparkles,
   Wallet,
 } from "lucide-react";
+import { IntroSplash } from "@/components/landing/IntroSplash";
 
 const experiences = [
   {
@@ -160,6 +161,7 @@ function Eyebrow({ children, tone = "ufx" }: { children: React.ReactNode; tone?:
 export default function LandingPage() {
   return (
     <main className="landing-shell">
+      <IntroSplash />
       <LandingAtmosphere />
 
       <div className="landing-header-glass sticky top-0 z-20">
