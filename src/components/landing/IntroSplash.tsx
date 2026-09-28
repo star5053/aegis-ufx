@@ -1,7 +1,96 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Clapperboard, Gamepad2, Music2, Radio, ShieldCheck, Wallet } from "lucide-react";
+import Link from "next/link";
+import {
+  ArrowRight,
+  Clapperboard,
+  Gamepad2,
+  Gift,
+  Headphones,
+  Music2,
+  Radio,
+  ShieldCheck,
+  Sparkles,
+  Wallet,
+  type LucideIcon,
+} from "lucide-react";
+
+type Ad = {
+  side: "left" | "right";
+  src: string;
+  alt: string;
+  eyebrow: string;
+  title: string;
+  chips: { icon: LucideIcon; label: string }[];
+};
+
+const ADS: Ad[] = [
+  {
+    side: "left",
+    src: "/intro/woman.webp",
+    alt: "Creator sharing a reel on UFX",
+    eyebrow: "Create on UFX",
+    title: "Post a reel tonight. Go live tomorrow.",
+    chips: [
+      { icon: Clapperboard, label: "Reels" },
+      { icon: Music2, label: "Add any track" },
+      { icon: Gift, label: "Live gifts" },
+    ],
+  },
+  {
+    side: "right",
+    src: "/intro/man.webp",
+    alt: "Player joining a game room on UFX",
+    eyebrow: "Play on UFX",
+    title: "Play with friends. Earn real coins.",
+    chips: [
+      { icon: Gamepad2, label: "Game rooms" },
+      { icon: Headphones, label: "Top charts" },
+      { icon: Wallet, label: "Coin wallet" },
+    ],
+  },
+];
+
+function IntroAd({ ad }: { ad: Ad }) {
+  return (
+    <aside className={`intro-ad intro-ad--${ad.side}`}>
+      <figure className="intro-ad__figure">
+        <div className="intro-ad__glow" aria-hidden />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={ad.src}
+          alt={ad.alt}
+          width={720}
+          height={960}
+          fetchPriority="high"
+          className="intro-ad__img"
+        />
+        <ul className="intro-ad__chips">
+          {ad.chips.map(({ icon: Icon, label }, i) => (
+            <li key={label} className={`intro-ad__chip intro-ad__chip--${i + 1}`}>
+              <span className="intro-ad__chip-icon">
+                <Icon className="h-3.5 w-3.5" strokeWidth={2.2} />
+              </span>
+              {label}
+            </li>
+          ))}
+        </ul>
+      </figure>
+      <div className="intro-ad__card">
+        <p className="intro-ad__eyebrow">
+          <Sparkles className="h-3 w-3" />
+          {ad.eyebrow}
+        </p>
+        <p className="intro-ad__title">{ad.title}</p>
+        <Link href="/ufx/login" className="intro-ad__cta">
+          Join free
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+    </aside>
+  );
+}
 
 const NODES = [
   { label: "Social", icon: Clapperboard },
@@ -55,7 +144,7 @@ export function IntroSplash() {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const duration = reduced ? 1100 : 2800;
+    const duration = reduced ? 1100 : 4200;
     const start = performance.now();
     let raf = 0;
 
@@ -112,6 +201,10 @@ export function IntroSplash() {
       <button type="button" onClick={finish} className="intro__skip">
         Skip intro
       </button>
+
+      {ADS.map((ad) => (
+        <IntroAd key={ad.side} ad={ad} />
+      ))}
 
       <div className="intro__stage">
         <p className="intro__eyebrow">
