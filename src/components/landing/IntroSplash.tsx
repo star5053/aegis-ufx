@@ -129,7 +129,7 @@ const points = NODES.map((_, i) => {
   };
 });
 
-const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+const easeOutQuad = (t: number) => 1 - (1 - t) * (1 - t);
 
 type Phase = "loading" | "exit" | "done";
 
@@ -144,13 +144,13 @@ export function IntroSplash() {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const duration = reduced ? 1100 : 4200;
+    const duration = reduced ? 1100 : 7000;
     const start = performance.now();
     let raf = 0;
 
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / duration);
-      setProgress(Math.round(easeOutCubic(t) * 100));
+      setProgress(Math.round(easeOutQuad(t) * 100));
       if (t < 1) {
         raf = requestAnimationFrame(tick);
       } else {
