@@ -75,7 +75,7 @@ function IntroAd({ ad }: { ad: Ad }) {
           alt={ad.alt}
           width={768}
           height={1024}
-          sizes="(min-width: 1024px) 340px, 1px"
+          sizes="(min-width: 900px) 340px, 1px"
           loading="eager"
           fetchPriority="high"
           className="intro-ad__img"
