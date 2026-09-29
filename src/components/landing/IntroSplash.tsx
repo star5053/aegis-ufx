@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  BadgeCheck,
   Clapperboard,
   Gamepad2,
   Gift,
@@ -12,6 +14,7 @@ import {
   Radio,
   ShieldCheck,
   Sparkles,
+  Users,
   Wallet,
   type LucideIcon,
 } from "lucide-react";
@@ -20,18 +23,24 @@ type Ad = {
   side: "left" | "right";
   src: string;
   alt: string;
+  badge: { live?: boolean; icon?: LucideIcon; label: string };
   eyebrow: string;
   title: string;
+  handle: string;
+  role: string;
   chips: { icon: LucideIcon; label: string }[];
 };
 
 const ADS: Ad[] = [
   {
     side: "left",
-    src: "/intro/woman.webp",
-    alt: "Creator sharing a reel on UFX",
+    src: "/intro/creator-mina.png",
+    alt: "Mina, a music creator, sharing a reel on UFX",
+    badge: { live: true, label: "2.4K watching" },
     eyebrow: "Create on UFX",
     title: "Post a reel tonight. Go live tomorrow.",
+    handle: "@mina.wav",
+    role: "Music creator",
     chips: [
       { icon: Clapperboard, label: "Reels" },
       { icon: Music2, label: "Add any track" },
@@ -40,10 +49,13 @@ const ADS: Ad[] = [
   },
   {
     side: "right",
-    src: "/intro/man.webp",
-    alt: "Player joining a game room on UFX",
+    src: "/intro/creator-leo.png",
+    alt: "Leo, a player, joining a game room on UFX",
+    badge: { icon: Users, label: "Racing room · 4/8" },
     eyebrow: "Play on UFX",
     title: "Play with friends. Earn real coins.",
+    handle: "@leo.gg",
+    role: "Top player",
     chips: [
       { icon: Gamepad2, label: "Game rooms" },
       { icon: Headphones, label: "Top charts" },
@@ -53,19 +65,29 @@ const ADS: Ad[] = [
 ];
 
 function IntroAd({ ad }: { ad: Ad }) {
+  const BadgeIcon = ad.badge.icon;
   return (
     <aside className={`intro-ad intro-ad--${ad.side}`}>
       <figure className="intro-ad__figure">
         <div className="intro-ad__glow" aria-hidden />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={ad.src}
           alt={ad.alt}
-          width={720}
-          height={960}
+          width={768}
+          height={1024}
+          sizes="(min-width: 1024px) 340px, 1px"
+          loading="eager"
           fetchPriority="high"
           className="intro-ad__img"
         />
+        <span className="intro-ad__badge">
+          {ad.badge.live ? (
+            <span className="intro-ad__live">Live</span>
+          ) : (
+            BadgeIcon && <BadgeIcon className="h-3.5 w-3.5" strokeWidth={2.2} />
+          )}
+          {ad.badge.label}
+        </span>
         <ul className="intro-ad__chips">
           {ad.chips.map(({ icon: Icon, label }, i) => (
             <li key={label} className={`intro-ad__chip intro-ad__chip--${i + 1}`}>
@@ -83,10 +105,19 @@ function IntroAd({ ad }: { ad: Ad }) {
           {ad.eyebrow}
         </p>
         <p className="intro-ad__title">{ad.title}</p>
-        <Link href="/ufx/login" className="intro-ad__cta">
-          Join free
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
+        <div className="intro-ad__foot">
+          <p className="intro-ad__handle">
+            <span className="intro-ad__handle-name">
+              {ad.handle}
+              <BadgeCheck className="h-3.5 w-3.5" strokeWidth={2.2} aria-label="Verified" />
+            </span>
+            <span className="intro-ad__handle-role">{ad.role}</span>
+          </p>
+          <Link href="/ufx/login" className="intro-ad__cta">
+            Join free
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </div>
     </aside>
   );
@@ -131,20 +162,26 @@ const points = NODES.map((_, i) => {
 
 const easeOutQuad = (t: number) => 1 - (1 - t) * (1 - t);
 
-type Phase = "loading" | "exit" | "done";
+const LOAD_MS = 6500;
+const READY_MS = 6000;
+
+type Phase = "loading" | "ready" | "exit" | "done";
 
 export function IntroSplash() {
   const [phase, setPhase] = useState<Phase>("loading");
   const [progress, setProgress] = useState(0);
-  const timers = useRef<number[]>([]);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   const finish = useCallback(() => {
-    setPhase((p) => (p === "loading" ? "exit" : p));
+    setPhase((p) => (p === "loading" || p === "ready" ? "exit" : p));
   }, []);
 
   useEffect(() => {
+    // Hydrated: the component owns the lifecycle, so the no-JS CSS failsafe must not cut the ads short.
+    if (rootRef.current) rootRef.current.style.animation = "none";
+
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const duration = reduced ? 1100 : 7000;
+    const duration = reduced ? 1100 : LOAD_MS;
     const start = performance.now();
     let raf = 0;
 
@@ -154,22 +191,32 @@ export function IntroSplash() {
       if (t < 1) {
         raf = requestAnimationFrame(tick);
       } else {
-        timers.current.push(window.setTimeout(finish, 280));
+        setPhase((p) => (p === "loading" ? "ready" : p));
       }
     };
     raf = requestAnimationFrame(tick);
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Enter") finish();
+    };
+    window.addEventListener("keydown", onKey);
 
     const root = document.documentElement;
     const prevOverflow = root.style.overflow;
     root.style.overflow = "hidden";
 
-    const pending = timers.current;
     return () => {
       cancelAnimationFrame(raf);
-      pending.forEach(clearTimeout);
+      window.removeEventListener("keydown", onKey);
       root.style.overflow = prevOverflow;
     };
   }, [finish]);
+
+  useEffect(() => {
+    if (phase !== "ready") return;
+    const id = window.setTimeout(finish, READY_MS);
+    return () => clearTimeout(id);
+  }, [phase, finish]);
 
   useEffect(() => {
     if (phase !== "exit") return;
@@ -181,9 +228,11 @@ export function IntroSplash() {
   if (phase === "done") return null;
 
   const step = [...STEPS].reverse().find((s) => progress >= s.at) ?? STEPS[0];
+  const ready = phase === "ready";
 
   return (
     <div
+      ref={rootRef}
       className={`intro ${phase === "exit" ? "intro--exit" : ""}`}
       aria-label="Loading UFX"
       aria-busy={phase === "loading"}
@@ -288,19 +337,43 @@ export function IntroSplash() {
           </p>
         </div>
 
-        <div className="intro__progress">
-          <div className="intro__progress-row">
-            <p role="status" aria-live="polite" className="intro__status">
-              <span className="intro__status-dot" />
-              {step.text}
-              <span className="intro__ellipsis" />
-            </p>
-            <span className="intro__percent">{String(progress).padStart(3, "0")}%</span>
-          </div>
-          <div className="intro__bar">
-            <span className="intro__bar-fill" style={{ transform: `scaleX(${progress / 100})` }} />
-          </div>
+        <div className="intro__people">
+          <span className="intro__avatars" aria-hidden>
+            {ADS.map((ad) => (
+              <span key={ad.side} className="intro__avatar">
+                <Image src={ad.src} alt="" width={768} height={1024} sizes="72px" />
+              </span>
+            ))}
+          </span>
+          <span>
+            Join <strong>Mina</strong>, <strong>Leo</strong> and creators on UFX
+          </span>
         </div>
+
+        {ready ? (
+          <div className="intro__ready">
+            <button type="button" onClick={finish} className="intro__enter">
+              Enter UFX
+              <ArrowRight className="h-4 w-4" />
+            </button>
+            <div className="intro__autobar" style={{ animationDuration: `${READY_MS}ms` }} />
+            <p className="intro__ready-hint">Opening automatically · press Enter</p>
+          </div>
+        ) : (
+          <div className="intro__progress">
+            <div className="intro__progress-row">
+              <p role="status" aria-live="polite" className="intro__status">
+                <span className="intro__status-dot" />
+                {step.text}
+                <span className="intro__ellipsis" />
+              </p>
+              <span className="intro__percent">{String(progress).padStart(3, "0")}%</span>
+            </div>
+            <div className="intro__bar">
+              <span className="intro__bar-fill" style={{ transform: `scaleX(${progress / 100})` }} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
