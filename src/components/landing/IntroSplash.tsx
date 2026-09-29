@@ -19,7 +19,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-type Ad = {
+// Class names avoid "ad"/"promo" wording: ad blockers' cosmetic filters hide such elements.
+type Cast = {
   side: "left" | "right";
   src: string;
   alt: string;
@@ -31,7 +32,7 @@ type Ad = {
   chips: { icon: LucideIcon; label: string }[];
 };
 
-const ADS: Ad[] = [
+const CAST: Cast[] = [
   {
     side: "left",
     src: "/intro/creator-mina.webp",
@@ -64,34 +65,34 @@ const ADS: Ad[] = [
   },
 ];
 
-function IntroAd({ ad }: { ad: Ad }) {
-  const BadgeIcon = ad.badge.icon;
+function IntroCast({ cast }: { cast: Cast }) {
+  const BadgeIcon = cast.badge.icon;
   return (
-    <aside className={`intro-ad intro-ad--${ad.side}`}>
-      <figure className="intro-ad__figure">
-        <div className="intro-ad__glow" aria-hidden />
+    <aside className={`intro-cast intro-cast--${cast.side}`}>
+      <figure className="intro-cast__figure">
+        <div className="intro-cast__glow" aria-hidden />
         <Image
-          src={ad.src}
-          alt={ad.alt}
+          src={cast.src}
+          alt={cast.alt}
           width={768}
           height={1024}
           sizes="340px"
           loading="eager"
           fetchPriority="high"
-          className="intro-ad__img"
+          className="intro-cast__img"
         />
-        <span className="intro-ad__badge">
-          {ad.badge.live ? (
-            <span className="intro-ad__live">Live</span>
+        <span className="intro-cast__badge">
+          {cast.badge.live ? (
+            <span className="intro-cast__live">Live</span>
           ) : (
             BadgeIcon && <BadgeIcon className="h-3.5 w-3.5" strokeWidth={2.2} />
           )}
-          {ad.badge.label}
+          {cast.badge.label}
         </span>
-        <ul className="intro-ad__chips">
-          {ad.chips.map(({ icon: Icon, label }, i) => (
-            <li key={label} className={`intro-ad__chip intro-ad__chip--${i + 1}`}>
-              <span className="intro-ad__chip-icon">
+        <ul className="intro-cast__chips">
+          {cast.chips.map(({ icon: Icon, label }, i) => (
+            <li key={label} className={`intro-cast__chip intro-cast__chip--${i + 1}`}>
+              <span className="intro-cast__chip-icon">
                 <Icon className="h-3.5 w-3.5" strokeWidth={2.2} />
               </span>
               {label}
@@ -99,21 +100,21 @@ function IntroAd({ ad }: { ad: Ad }) {
           ))}
         </ul>
       </figure>
-      <div className="intro-ad__card">
-        <p className="intro-ad__eyebrow">
+      <div className="intro-cast__card">
+        <p className="intro-cast__eyebrow">
           <Sparkles className="h-3 w-3" />
-          {ad.eyebrow}
+          {cast.eyebrow}
         </p>
-        <p className="intro-ad__title">{ad.title}</p>
-        <div className="intro-ad__foot">
-          <p className="intro-ad__handle">
-            <span className="intro-ad__handle-name">
-              {ad.handle}
+        <p className="intro-cast__title">{cast.title}</p>
+        <div className="intro-cast__foot">
+          <p className="intro-cast__handle">
+            <span className="intro-cast__handle-name">
+              {cast.handle}
               <BadgeCheck className="h-3.5 w-3.5" strokeWidth={2.2} aria-label="Verified" />
             </span>
-            <span className="intro-ad__handle-role">{ad.role}</span>
+            <span className="intro-cast__handle-role">{cast.role}</span>
           </p>
-          <Link href="/ufx/login" className="intro-ad__cta">
+          <Link href="/ufx/login" className="intro-cast__cta">
             Join free
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
@@ -251,8 +252,8 @@ export function IntroSplash() {
         Skip intro
       </button>
 
-      {ADS.map((ad) => (
-        <IntroAd key={ad.side} ad={ad} />
+      {CAST.map((cast) => (
+        <IntroCast key={cast.side} cast={cast} />
       ))}
 
       <div className="intro__stage">
@@ -339,9 +340,9 @@ export function IntroSplash() {
 
         <div className="intro__people">
           <span className="intro__avatars" aria-hidden>
-            {ADS.map((ad) => (
-              <span key={ad.side} className="intro__avatar">
-                <Image src={ad.src} alt="" width={768} height={1024} sizes="340px" />
+            {CAST.map((cast) => (
+              <span key={cast.side} className="intro__avatar">
+                <Image src={cast.src} alt="" width={768} height={1024} sizes="340px" />
               </span>
             ))}
           </span>
