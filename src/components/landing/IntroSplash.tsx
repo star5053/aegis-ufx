@@ -34,7 +34,7 @@ type Ad = {
 const ADS: Ad[] = [
   {
     side: "left",
-    src: "/intro/creator-mina.png",
+    src: "/intro/creator-mina.webp",
     alt: "Mina, a music creator, sharing a reel on UFX",
     badge: { live: true, label: "2.4K watching" },
     eyebrow: "Create on UFX",
@@ -49,7 +49,7 @@ const ADS: Ad[] = [
   },
   {
     side: "right",
-    src: "/intro/creator-leo.png",
+    src: "/intro/creator-leo.webp",
     alt: "Leo, a player, joining a game room on UFX",
     badge: { icon: Users, label: "Racing room · 4/8" },
     eyebrow: "Play on UFX",

@@ -1041,9 +1041,8 @@ textarea {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* The ellipse must stay inside the frame so every edge reaches full transparency. */
-  -webkit-mask-image: radial-gradient(ellipse 50% 46% at 50% 44%, #000 60%, transparent 100%);
-  mask-image: radial-gradient(ellipse 50% 46% at 50% 44%, #000 60%, transparent 100%);
+  /* The edge fade is baked into the webp alpha: Chrome skips repainting a CSS mask on
+     images revealed by a media query after resize, which left the portraits invisible. */
 }
 
 .intro-ad__chips {
