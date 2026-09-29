@@ -75,7 +75,7 @@ function IntroAd({ ad }: { ad: Ad }) {
           alt={ad.alt}
           width={768}
           height={1024}
-          sizes="(min-width: 900px) 340px, 1px"
+          sizes="340px"
           loading="eager"
           fetchPriority="high"
           className="intro-ad__img"
@@ -341,7 +341,7 @@ export function IntroSplash() {
           <span className="intro__avatars" aria-hidden>
             {ADS.map((ad) => (
               <span key={ad.side} className="intro__avatar">
-                <Image src={ad.src} alt="" width={768} height={1024} sizes="72px" />
+                <Image src={ad.src} alt="" width={768} height={1024} sizes="340px" />
               </span>
             ))}
           </span>
